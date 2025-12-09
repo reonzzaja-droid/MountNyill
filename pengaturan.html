@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MountNyill</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="backdrop" class="backdrop"></div>
+
+    <header>
+        <div class="site-brand">
+            <img src="logo.png" alt="MountNyill logo" class="site-logo">
+            <h1>MountNyill</h1>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Katalog</a></li>
+            <li><a href="tentang-kami.html">Tentang Kami</a></li>
+            <li><a href="kontak.html">Kontak</a></li>
+            <li><a href="profil.html">👤 Profil</a></li>
+            <li><a href="pengaturan.html" class="active">⚙️ Pengaturan</a></li>
+            <li><a href="#" id="cart-toggle">🛒 Keranjang (<span id="cart-count">0</span>)</a></li>
+        </ul>
+    </nav>
+
+    <aside id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Keranjang Belanja</h3>
+            <button id="close-cart">&times;</button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <p class="empty-cart">Keranjang kosong</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: </strong>
+                <span id="cart-total">Rp 0</span>
+            </div>
+            <div class="cart-buttons">
+                <button id="checkout-btn" class="btn-checkout">Checkout</button>
+                <button id="clear-cart-btn" class="btn-clear-cart">Hapus Semua</button>
+            </div>
+        </div>
+    </aside>
+
+    <main>
+        <section class="full-page-section">
+            <div class="settings-container">
+                <h2>⚙️ Pengaturan Akun</h2>
+                
+                <div class="settings-group">
+                    <h3>🔐 Keamanan</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <p class="setting-title">Ubah Password</p>
+                            <p class="setting-desc">Perbarui password akun Anda untuk keamanan lebih baik</p>
+                        </div>
+                        <button class="btn-setting" onclick="changePassword()">Ubah</button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>🔔 Notifikasi & Komunikasi</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <p class="setting-title">Email Notifikasi</p>
+                            <p class="setting-desc">Dapatkan update penting via email</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="email-notif" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <p class="setting-title">Penawaran & Promo</p>
+                            <p class="setting-desc">Terima diskon eksklusif dan penawaran terbatas</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="promo-notif" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>🎨 Tampilan & Tema</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <p class="setting-title">Mode Gelap</p>
+                            <p class="setting-desc">Aktifkan tema gelap untuk kenyamanan mata</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>💾 Data & Penyimpanan</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <p class="setting-title">Hapus Cache</p>
+                            <p class="setting-desc">Bersihkan data cache untuk menghemat penyimpanan</p>
+                        </div>
+                        <button class="btn-setting btn-danger" onclick="clearCache()">Hapus</button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>👋 Akun</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <p class="setting-title">Logout</p>
+                            <p class="setting-desc">Keluar dari akun Anda</p>
+                        </div>
+                        <button class="btn-setting btn-danger" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 MountNyill Semua hak dilindungi.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Load settings
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('userSettings')) || {
+                emailNotif: true,
+                promoNotif: true,
+                darkMode: false
+            };
+
+            document.getElementById('email-notif').checked = settings.emailNotif;
+            document.getElementById('promo-notif').checked = settings.promoNotif;
+            document.getElementById('dark-mode').checked = settings.darkMode;
+
+            if (settings.darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        // Save settings on toggle
+        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+            toggle.addEventListener('change', saveSettings);
+        });
+
+        function saveSettings() {
+            const settings = {
+                emailNotif: document.getElementById('email-notif').checked,
+                promoNotif: document.getElementById('promo-notif').checked,
+                darkMode: document.getElementById('dark-mode').checked
+            };
+
+            localStorage.setItem('userSettings', JSON.stringify(settings));
+
+            if (settings.darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+
+            // Show success message
+            showSuccessMessage('Pengaturan berhasil disimpan! ✓');
+        }
+
+        function showSuccessMessage(message) {
+            const msg = document.createElement('div');
+            msg.textContent = message;
+            msg.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                animation: slideInRight 0.3s ease;
+                z-index: 999;
+                font-weight: 500;
+            `;
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => msg.remove(), 300);
+            }, 2000);
+        }
+
+        function changePassword() {
+            const oldPass = prompt('Masukkan password lama:');
+            if (!oldPass) return;
+
+            const newPass = prompt('Masukkan password baru:');
+            if (!newPass) return;
+
+            const confirmPass = prompt('Konfirmasi password baru:');
+            if (newPass === confirmPass) {
+                showSuccessMessage('Password berhasil diubah! ✓');
+            } else {
+                showErrorMessage('Password tidak sesuai!');
+            }
+        }
+
+        function showErrorMessage(message) {
+            const msg = document.createElement('div');
+            msg.textContent = message;
+            msg.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+                animation: slideInRight 0.3s ease;
+                z-index: 999;
+                font-weight: 500;
+            `;
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => msg.remove(), 300);
+            }, 2000);
+        }
+
+        function clearCache() {
+            if (confirm('Apakah Anda yakin ingin menghapus cache? Data yang dihapus tidak dapat dikembalikan.')) {
+                localStorage.removeItem('cart');
+                showSuccessMessage('Cache berhasil dihapus! ✓');
+            }
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                showSuccessMessage('Anda berhasil logout!');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+
+        loadSettings();
+    </script>
+</body>
+</html>

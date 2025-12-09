@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MountNyill</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="backdrop" class="backdrop"></div>
+
+    <header>
+        <div class="site-brand">
+            <img src="logo.png" alt="MountNyill logo" class="site-logo">
+            <h1>MountNyill</h1>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Katalog</a></li>
+            <li><a href="tentang-kami.html">Tentang Kami</a></li>
+            <li><a href="kontak.html">Kontak</a></li>
+            <li><a href="profil.html" class="active">👤 Profil</a></li>
+            <li><a href="pengaturan.html">⚙️ Pengaturan</a></li>
+            <li><a href="#" id="cart-toggle">🛒 Keranjang (<span id="cart-count">0</span>)</a></li>
+        </ul>
+    </nav>
+
+    <aside id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Keranjang Belanja</h3>
+            <button id="close-cart">&times;</button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <p class="empty-cart">Keranjang kosong</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: </strong>
+                <span id="cart-total">Rp 0</span>
+            </div>
+            <div class="cart-buttons">
+                <button id="checkout-btn" class="btn-checkout">Checkout</button>
+                <button id="clear-cart-btn" class="btn-clear-cart">Hapus Semua</button>
+            </div>
+        </div>
+    </aside>
+
+    <main>
+        <section class="full-page-section">
+            <div class="profile-container">
+                <div class="profile-sidebar">
+                    <div class="profile-avatar">
+                        <span id="avatar-initial">P</span>
+                    </div>
+                    <h2 id="profile-name">Pengguna</h2>
+                    <p id="profile-email">user@email.com</p>
+                    <nav class="profile-menu">
+                        <a href="#profile-info" class="menu-item active">📋 Informasi Profil</a>
+                        <a href="#profile-history" class="menu-item">📜 Riwayat Pembelian</a>
+                        <a href="pengaturan.html" class="menu-item">⚙️ Pengaturan</a>
+                    </nav>
+                </div>
+
+                <div class="profile-content">
+                    <div id="profile-info" class="profile-section active">
+                        <h2>Informasi Profil</h2>
+                        <div class="profile-form">
+                            <div class="form-group">
+                                <label>Nama Lengkap</label>
+                                <input type="text" id="full-name" placeholder="Masukkan nama lengkap" value="Pengguna">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="user-email" placeholder="user@email.com" value="user@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Telepon</label>
+                                    <input type="tel" id="user-phone" placeholder="08xx-xxxx-xxxx">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Alamat</label>
+                                <textarea id="user-address" placeholder="Masukkan alamat lengkap Anda" rows="3"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Kota</label>
+                                    <input type="text" id="user-city" placeholder="Kota">
+                                </div>
+                                <div class="form-group">
+                                    <label>Provinsi</label>
+                                    <input type="text" id="user-province" placeholder="Provinsi">
+                                </div>
+                                <div class="form-group">
+                                    <label>Kode Pos</label>
+                                    <input type="text" id="user-zipcode" placeholder="12345">
+                                </div>
+                            </div>
+                            <button class="btn-save" onclick="saveProfile()">💾 Simpan Perubahan</button>
+                        </div>
+                    </div>
+
+                    <div id="profile-history" class="profile-section">
+                        <h2>Riwayat Pembelian</h2>
+                        <div id="purchase-history" class="purchase-list">
+                            <p class="empty-message">Belum ada riwayat pembelian</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 MountNyill Semua hak dilindungi.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Load profile data
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem('userProfile')) || {
+                fullName: 'Pengguna',
+                email: 'user@email.com',
+                phone: '',
+                address: '',
+                city: '',
+                province: '',
+                zipcode: ''
+            };
+
+            document.getElementById('profile-name').textContent = profile.fullName;
+            document.getElementById('profile-email').textContent = profile.email;
+            document.getElementById('avatar-initial').textContent = profile.fullName.charAt(0).toUpperCase();
+            
+            document.getElementById('full-name').value = profile.fullName;
+            document.getElementById('user-email').value = profile.email;
+            document.getElementById('user-phone').value = profile.phone;
+            document.getElementById('user-address').value = profile.address;
+            document.getElementById('user-city').value = profile.city;
+            document.getElementById('user-province').value = profile.province;
+            document.getElementById('user-zipcode').value = profile.zipcode;
+        }
+
+        function saveProfile() {
+            const profile = {
+                fullName: document.getElementById('full-name').value,
+                email: document.getElementById('user-email').value,
+                phone: document.getElementById('user-phone').value,
+                address: document.getElementById('user-address').value,
+                city: document.getElementById('user-city').value,
+                province: document.getElementById('user-province').value,
+                zipcode: document.getElementById('user-zipcode').value
+            };
+
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+            document.getElementById('profile-name').textContent = profile.fullName;
+            document.getElementById('profile-email').textContent = profile.email;
+            document.getElementById('avatar-initial').textContent = profile.fullName.charAt(0).toUpperCase();
+            
+            alert('Profil berhasil diperbarui!');
+        }
+
+        // Menu navigation
+        document.querySelectorAll('.profile-menu .menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = item.getAttribute('href');
+                
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                item.classList.add('active');
+                
+                document.querySelectorAll('.profile-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                if (href.startsWith('#')) {
+                    document.querySelector(href).classList.add('active');
+                }
+            });
+        });
+
+        // Load dark mode setting
+        const settings = JSON.parse(localStorage.getItem('userSettings')) || {
+            emailNotif: true,
+            promoNotif: true,
+            darkMode: false
+        };
+
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>
